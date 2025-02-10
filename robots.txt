@@ -1,0 +1,36 @@
+User-agent: *
+
+
+Disallow: /login.php         # Страница входа
+Disallow: /register.php      # Страница регистрации
+Disallow: /auth.php          # Обработчик аутентификации
+
+# Запрет индексации административной панели и обработчиков данных
+Disallow: /admin_panel.php   # Административная панель
+Disallow: /add_record.php    # Добавление записей
+Disallow: /delete_record.php # Удаление записей
+Disallow: /edit_record.php   # Редактирование записей
+Disallow: /view_table.php    # Просмотр таблицы
+
+# Запрет индексации обработчиков обновления данных
+Disallow: /update_login.php     # Обновление логина
+Disallow: /update_password.php  # Обновление пароля
+
+# Запрет индексации файлов загрузки и обработки аватарок
+Disallow: /upload_avatar.php    # Загрузка аватарок
+
+# Запрет индексации технических файлов и скриптов
+Disallow: /db.php              # Файл подключения к базе данных
+Disallow: /contact-handler.php  # Обработчик формы обратной связи
+
+# Запрет индексации вспомогательных файлов и директорий
+Disallow: /AIN.zip             # Архив с исходными файлами
+Disallow: /avatars/            # Директория с аватарками пользователей
+Disallow: /_mixins.scss        # SCSS миксины
+Disallow: /style.css.map       # Карта CSS-файла
+
+
+Allow: /
+
+
+Sitemap: https://example.com/sitemap.xml

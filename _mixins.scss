@@ -1,0 +1,116 @@
+@mixin footer {
+    .footer {
+ 
+        color: #ffffff;
+        padding: 50px 150px;
+        font-family: 'Tenor Sans', sans-serif;
+    
+        .footer-content {
+            
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+    
+            .footer-section {
+                flex: 1;
+    
+                h2 {
+                    font-size: 28px;
+                    margin-bottom: 10px;
+                }
+    
+                p {
+                    font-size: 16px;
+                    margin-bottom: 5px;
+                }
+    
+                a {
+                    color: #00ffff;
+                    text-decoration: none;
+    
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+    
+            .company-info {
+                p:first-child {
+                    margin-bottom: 20px;
+                }
+            }
+    
+            .contacts {
+                p {
+                    font-size: 16px;
+                }
+            }
+    
+            .footer-logo {
+                flex: 1;
+                text-align: right;
+    margin-right: 17px;
+              
+            }
+        }
+    
+        .footer-social {
+            text-align: center;
+            margin-bottom: 50px;
+    
+            a {
+                margin: 0 10px;
+                display: inline-block;
+    
+                img {
+                    margin-top: 100px;
+                    width: 30px;  // Размер иконок
+                    height: 30px;
+                    transition: transform 0.3s;
+    
+                    &:hover {
+                        transform: scale(1.1);  // Легкое увеличение при наведении
+                    }
+                }
+            }
+        }
+    
+        .footer-bottom {
+            text-align: left;  // Выравнивание по левому краю
+            border-top: 1px solid #444;
+            padding-top: 20px;
+    
+            p {
+                font-size: 14px;
+                margin: 5px 0;
+    
+                a {
+                    color: #00ffff;
+                    text-decoration: none;
+    
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    
+        .footer-disclaimer {
+            text-align: left;  // Выравнивание по левому краю
+            font-size: 12px;
+            margin-top: 20px;
+            line-height: 1.5;
+            color: #bbbbbb;
+    
+            p{
+                width: 1163px;
+            }
+    
+            p:last-child {  // Отступ только для последнего абзаца
+                margin-top: 50px;  // Отступ сверху
+            }
+        }
+    }
+    
+}
