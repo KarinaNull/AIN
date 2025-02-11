@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 // Проверка на авторизацию
 if (!isset($_SESSION['username'])) {
     header("Location: auth.php");
@@ -27,31 +26,33 @@ if ($role !== 'moderator') {
     exit();
 }
 
-// Получаем username из сессии
-$username = $_SESSION['username'];
+// Получаем параметр поиска из GET-запроса
+$searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Запрос к базе данных для получения роли пользователя
-$stmt = $conn->prepare("SELECT role FROM users WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$stmt->bind_result($role);
-$stmt->fetch();
-$stmt->close();
-
-// Проверка, что роль пользователя - moderator
-if ($role !== 'moderator') {
-    header("Location: mainPage.php");
-    exit();
-}
-
-// Получение всех таблиц из базы данных для админ-панели
+// Получение всех таблиц из базы данных
 $tablesQuery = "SHOW TABLES";
 $tablesResult = $conn->query($tablesQuery);
+
+// Инициализируем пустой массив $filteredTables для хранения имён таблиц, которые прошли фильтрацию
+$filteredTables = [];
+
+// Проверяем, есть ли в базе данных хотя бы одна таблица
+if ($tablesResult->num_rows > 0) {
+    // Цикл перебора всех таблиц из результата запроса "SHOW TABLES"
+    while ($table = $tablesResult->fetch_array()) {
+        // Проверяем два условия:
+        // 1. Таблица не должна называться 'user_change_log' (исключаем её из списка)
+        // 2. Имя таблицы должно содержать поисковый запрос ($searchTerm), регистр символов не учитывается
+        if ($table[0] !== 'user_change_log' && stripos($table[0], $searchTerm) !== false) {
+            // Если оба условия выполняются, добавляем имя таблицы в массив $filteredTables
+            $filteredTables[] = $table[0];
+        }
+    }
+}
 
 // Закрываем соединение
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,34 +70,33 @@ $conn->close();
             <li><a href="admin_panel.php">Админ-панель</a></li>
             <li><a href="mainPage.php">Главная</a></li>
         </ul>
+    </div>
 
-        <!-- <div class="account">
-            <button onclick="history.back() " class="back-button">Назад</button>
-        </div> -->
+    <!-- Поисковая форма -->
+    <div class="search-bar">
+        <form method="GET" action="admin_panel.php">
+            <input type="text" name="search" placeholder="Поиск по таблицам..." value="<?php echo htmlspecialchars($searchTerm); ?>">
+            <button type="submit">Поиск</button>
+        </form>
     </div>
 
     <div class="dashboardData">
         <h2>Управление данными</h2>
-
-        <?php if ($tablesResult->num_rows > 0): ?>
+        <?php if (!empty($filteredTables)): ?>
             <h3>Список таблиц базы данных:</h3>
             <ul>
-                <?php while ($table = $tablesResult->fetch_array()): ?>
-                    <?php if ($table[0] !== 'user_change_log'): // Исключаем таблицу user_change_log 
-                    ?>
-                        <li>
-                            <a href="view_table.php?table=<?php echo htmlspecialchars($table[0]); ?>">
-                                <?php echo htmlspecialchars($table[0]); ?>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                <?php endwhile; ?>
+                <?php foreach ($filteredTables as $table): ?>
+                    <li>
+                        <a href="view_table.php?table=<?php echo htmlspecialchars($table); ?>">
+                            <?php echo htmlspecialchars($table); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
             </ul>
         <?php else: ?>
             <p>Таблицы не найдены в базе данных.</p>
         <?php endif; ?>
     </div>
-
 </body>
 
 </html>
