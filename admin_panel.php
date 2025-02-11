@@ -1,15 +1,12 @@
 <?php
 session_start();
-
 // Проверка на авторизацию
 if (!isset($_SESSION['username'])) {
     header("Location: auth.php");
     exit();
 }
-
 // Подключение к базе данных
 require 'db.php';
-
 // Получение роли пользователя из базы данных
 $username = $_SESSION['username'];
 $query = "SELECT role FROM users WHERE username = ?";
@@ -19,15 +16,15 @@ $stmt->execute();
 $stmt->bind_result($role);
 $stmt->fetch();
 $stmt->close();
-
 // Проверка роли
 if ($role !== 'moderator') {
     header("Location: mainPage.php"); // Перенаправление на главную для не модераторов
     exit();
 }
 
-// Получаем параметр поиска из GET-запроса
+// Получаем параметры из GET-запроса
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
+$order = isset($_GET['order']) ? $_GET['order'] : 'asc'; // По умолчанию сортировка A → Z
 
 // Получение всех таблиц из базы данных
 $tablesQuery = "SHOW TABLES";
@@ -44,10 +41,16 @@ if ($tablesResult->num_rows > 0) {
         // 1. Таблица не должна называться 'user_change_log' (исключаем её из списка)
         // 2. Имя таблицы должно содержать поисковый запрос ($searchTerm), регистр символов не учитывается
         if ($table[0] !== 'user_change_log' && stripos($table[0], $searchTerm) !== false) {
-            // Если оба условия выполняются, добавляем имя таблицы в массив $filteredTables
             $filteredTables[] = $table[0];
         }
     }
+}
+
+// Сортируем таблицы в зависимости от параметра $order
+if ($order === 'asc') {
+    sort($filteredTables); // Сортировка A → Z
+} elseif ($order === 'desc') {
+    rsort($filteredTables); // Сортировка Z → A
 }
 
 // Закрываем соединение
@@ -77,6 +80,17 @@ $conn->close();
         <form method="GET" action="admin_panel.php">
             <input type="text" name="search" placeholder="Поиск по таблицам..." value="<?php echo htmlspecialchars($searchTerm); ?>">
             <button type="submit">Поиск</button>
+        </form>
+    </div>
+
+    <div class="sort-dropdown">
+        <form method="GET" action="admin_panel.php">
+            <input type="hidden" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>">
+            <label for="order">Сортировка:</label>
+            <select id="order" name="order" onchange="this.form.submit()">
+                <option value="asc" <?php echo $order === 'asc' ? 'selected' : ''; ?>>A → Z</option>
+                <option value="desc" <?php echo $order === 'desc' ? 'selected' : ''; ?>>Z → A</option>
+            </select>
         </form>
     </div>
 
