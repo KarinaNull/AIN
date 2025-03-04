@@ -1,3 +1,43 @@
+<?php
+// Устанавливаем заголовок CSP для защиты от XSS
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com;");
+
+// Подключение к базе данных
+include 'db.php';
+
+// Функция для безопасного вывода данных
+function safe_output($data)
+{
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+// Запрос информации о компании
+$companyQuery = $conn->prepare("SELECT * FROM company_info LIMIT 1");
+$companyQuery->execute();
+$companyResult = $companyQuery->get_result();
+$company = $companyResult->fetch_assoc();
+
+// Запрос статистики
+$statsQuery = $conn->prepare("SELECT * FROM statistics");
+$statsQuery->execute();
+$statsResult = $statsQuery->get_result();
+
+// Запрос категорий оборудования
+$categoryQuery = $conn->prepare("SELECT * FROM equipment_categories");
+$categoryQuery->execute();
+$categoryResult = $categoryQuery->get_result();
+
+// Запрос отзывов
+$reviewsQuery = $conn->prepare("SELECT * FROM reviews");
+$reviewsQuery->execute();
+$reviewsResult = $reviewsQuery->get_result();
+
+// Запрос оборудования
+$equipmentQuery = $conn->prepare("SELECT * FROM equipment");
+$equipmentQuery->execute();
+$equipmentResult = $equipmentQuery->get_result();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,18 +47,9 @@
     <title>AIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=1.0">
-
 </head>
 
 <body>
-    <?php
-    include 'db.php';
-    ?>
-
-    <meta name="title" content="Профессиональное хлебопекарное оборудование | Печь для выпечки и технологические решения">
-    <meta name="description" content="Широкий ассортимент хлебопекарного оборудования для производства хлеба, пирогов и кондитерских изделий. Конвекционные печи, тестомесы, расстоечные шкафы. Профессиональные решения для пекарен.">
-    <meta name="keywords" content="печь для выпечки, хлебопекарное оборудование, оборудование для выпечки, конвекционная печь для выпечки, профессиональная печь для выпечки, печь для выпечки пирогов, оборудование для выпечки хлеба, оборудование хлебопекарной промышленности, хлебопекарное оборудование печи, хлебопекарное и технологическое оборудование">
-
     <div class="container">
         <div class="welckome-block">
             <img src="img/line2.png" alt="Line Image" class="line-image">
@@ -47,41 +78,21 @@
             </div>
         </div>
 
-        <?php
-        require_once 'db.php';
-
-        $companyQuery = "SELECT * FROM company_info LIMIT 1";
-        $companyResult = $conn->query($companyQuery);
-        $company = $companyResult->fetch_assoc();
-
-        $statsQuery = "SELECT * FROM statistics";
-        $statsResult = $conn->query($statsQuery);
-        ?>
-
         <div class="about-ain" id="about">
-            <h2 class="about-title"><?php echo htmlspecialchars($company['title']); ?></h2>
-            <p class="about-description"><?php echo htmlspecialchars($company['description']); ?></p>
+            <h2 class="about-title"><?php echo safe_output($company['title']); ?></h2>
+            <p class="about-description"><?php echo safe_output($company['description']); ?></p>
 
             <div class="statistics">
                 <?php while ($stat = $statsResult->fetch_assoc()): ?>
                     <div class="statistic-item">
-                        <span class="statistic-value"><?php echo htmlspecialchars($stat['statistic_value']); ?></span>
-                        <span class="statistic-description"><?php echo htmlspecialchars($stat['statistic_description']); ?></span>
+                        <span class="statistic-value"><?php echo safe_output($stat['statistic_value']); ?></span>
+                        <span class="statistic-description"><?php echo safe_output($stat['statistic_description']); ?></span>
                     </div>
                 <?php endwhile; ?>
             </div>
         </div>
 
-
-        <?php
-        require_once 'db.php';
-
-        $categoryQuery = "SELECT * FROM equipment_categories";
-        $categoryResult = $conn->query($categoryQuery);
-
-        if ($categoryResult->num_rows > 0):
-        ?>
-
+        <?php if ($categoryResult->num_rows > 0): ?>
             <div class="categories" id="categories">
                 <p class="before-categories">AIN принимает более 10.000 заказов ежегодно</p>
                 <p class="categories-main">Категории оборудования для производства</p>
@@ -91,9 +102,9 @@
                 <div class="left-cat">
                     <?php for ($i = 0; $i < 2 && $category = $categoryResult->fetch_assoc(); $i++): ?>
                         <div class="categories-message">
-                            <img src="<?php echo htmlspecialchars($category['image_url']); ?>" alt="Иконка" class="categories-message-img">
-                            <p class="message-title"><?php echo htmlspecialchars($category['title']); ?></p>
-                            <p class="message-text"><?php echo htmlspecialchars($category['description']); ?></p>
+                            <img src="<?php echo safe_output($category['image_url']); ?>" alt="Иконка" class="categories-message-img">
+                            <p class="message-title"><?php echo safe_output($category['title']); ?></p>
+                            <p class="message-text"><?php echo safe_output($category['description']); ?></p>
                         </div>
                     <?php endfor; ?>
                 </div>
@@ -101,43 +112,31 @@
                 <div class="left-cat">
                     <?php while ($category = $categoryResult->fetch_assoc()): ?>
                         <div class="categories-message">
-                            <img src="<?php echo htmlspecialchars($category['image_url']); ?>" alt="Иконка" class="categories-message-img">
-                            <p class="message-title"><?php echo htmlspecialchars($category['title']); ?></p>
-                            <p class="message-text"><?php echo htmlspecialchars($category['description']); ?></p>
+                            <img src="<?php echo safe_output($category['image_url']); ?>" alt="Иконка" class="categories-message-img">
+                            <p class="message-title"><?php echo safe_output($category['title']); ?></p>
+                            <p class="message-text"><?php echo safe_output($category['description']); ?></p>
                         </div>
                     <?php endwhile; ?>
                 </div>
             </div>
-
-        <?php
-        else:
-            echo "<p>Категории оборудования не найдены.</p>";
-        endif;
-        ?>
-
-
-        <?php
-        $imageDir = 'img/colleagues/';
-        $images = glob($imageDir . '*.png');
-        ?>
+        <?php else: ?>
+            <p>Категории оборудования не найдены.</p>
+        <?php endif; ?>
 
         <div class="colleagues">
-            <?php if (count($images) > 0):
-            ?>
-                <?php foreach ($images as $image): ?>
+            <?php
+            $imageDir = 'img/colleagues/';
+            $images = glob($imageDir . '*.png');
+            if (count($images) > 0):
+                foreach ($images as $image): ?>
                     <div class="colleague">
-                        <img src="<?php echo $image; ?>" alt="Colleague Photo">
+                        <img src="<?php echo safe_output($image); ?>" alt="Colleague Photo">
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
+                <?php endforeach;
+            else: ?>
                 <p>Изображения не найдены.</p>
             <?php endif; ?>
         </div>
-
-        <?php
-        $sql = "SELECT * FROM equipment";
-        $result = $conn->query($sql);
-        ?>
 
         <div class="equipment-section" id="important">
             <div class="equipment-info">
@@ -145,12 +144,12 @@
                 <p>на такое оборудование для выпекания хлеба, как:</p>
 
                 <div class="equipment-list">
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php if ($equipmentResult->num_rows > 0): ?>
+                        <?php while ($row = $equipmentResult->fetch_assoc()): ?>
                             <div class="equipment-item">
-                                <div class="equipment-sub-item" data-image="<?php echo htmlspecialchars($row['image_url']); ?>">
-                                    <h3><?php echo htmlspecialchars($row['title']); ?></h3>
-                                    <p><?php echo htmlspecialchars($row['description']); ?></p>
+                                <div class="equipment-sub-item" data-image="<?php echo safe_output($row['image_url']); ?>">
+                                    <h3><?php echo safe_output($row['title']); ?></h3>
+                                    <p><?php echo safe_output($row['description']); ?></p>
                                 </div>
                             </div>
                         <?php endwhile; ?>
@@ -178,12 +177,19 @@
             </div>
 
             <form class="contact-form" action="contact-handler.php" method="POST">
+                <?php
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] == 'success') {
+                    } elseif ($_GET['status'] == 'error') {
+                    }
+                }
+                ?>
+
                 <label for="email">Ваш E-mail</label>
                 <input type="email" id="email" name="email" placeholder="Введите ваш E-mail" required>
 
                 <label for="phone">Ваш номер телефона</label>
                 <input type="tel" id="phone" name="phone" placeholder="Введите ваш номер телефона" required>
-
 
                 <label for="message">Ваше сообщение</label>
                 <textarea id="message" name="message" placeholder="Введите ваше сообщение" required></textarea>
@@ -216,22 +222,17 @@
             };
         </script>
 
-        <?php
-        require_once 'db.php';
-
-        $reviewsQuery = "SELECT * FROM reviews";
-        $reviewsResult = $conn->query($reviewsQuery);
-        ?>
-
         <div class="reviews-section" id="reviews">
             <?php if ($reviewsResult->num_rows > 0): ?>
                 <?php while ($review = $reviewsResult->fetch_assoc()): ?>
                     <div class="review-item">
                         <div class="review-icon">
-                            <img src="<?php echo htmlspecialchars($review['review_icon']); ?>" alt="Цитата">
+                            <!-- $review['review_icon'] — это значение из базы данных или другого источника, которое содержит путь к изображению. -->
+                            <!-- safe_output() очищает и защищает данные перед их выводом. -->
+                            <img src="<?php echo safe_output($review['review_icon']); ?>" alt="Цитата">
                         </div>
                         <div class="review-content">
-                            <p><?php echo htmlspecialchars($review['review_text']); ?></p>
+                            <p><?php echo safe_output($review['review_text']); ?></p>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -239,7 +240,6 @@
                 <p>Отзывы не найдены.</p>
             <?php endif; ?>
         </div>
-
 
         <footer class="footer">
             <div class="footer-content">
@@ -269,7 +269,6 @@
                 <a href="https://www.tiktok.com" target="_blank"><img src="img/tiktok.png" alt="TikTok"></a>
             </div>
 
-
             <div class="footer-bottom">
                 <p>© AIN, все права защищены.</p>
                 <p><a href="#">Политика конфиденциальности</a> | <a href="#">Положения и условия</a></p>
@@ -283,13 +282,8 @@
                 <p>† Условия гарантии наилучшего тарифа с AIN</p>
             </div>
         </footer>
-
-
-
     </div>
     <script src="script.js"></script>
-    <?php include 'db.php'; ?>
-</body>
 </body>
 
 </html>

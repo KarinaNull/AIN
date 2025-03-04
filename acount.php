@@ -179,9 +179,9 @@ if (empty($_SESSION['csrf_token'])) {
                     </div>
                 <?php endwhile; ?>
 
-                <div class="create-request-card">
+                <a href="mainPage.php#contact-form" class="create-request-card">
                     <div class="create-icon">+</div>
-                </div>
+                </a>
             </div>
         </div>
 
