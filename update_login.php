@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $stmt->close();
-        header("Location: account.php"); // Переадресация на страницу учетной записи
+        header("Location: acount.php"); // Переадресация на страницу учетной записи
         exit();
     }
 }

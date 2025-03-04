@@ -164,9 +164,6 @@
             </div>
         </div>
 
-
-
-
         <div class="contact-section" id="contact-form">
             <div class="contact-info">
                 <h2>Пожалуйста, оставьте</h2>
