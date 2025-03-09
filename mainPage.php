@@ -1,7 +1,6 @@
 <?php
 // Устанавливаем заголовок CSP для защиты от XSS
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://api.openweathermap.org");
-
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://openweathermap.org; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://api.openweathermap.org https://api.openweathermap.org;");
 // Подключение к базе данных
 include 'db.php';
 
@@ -47,6 +46,7 @@ $equipmentResult = $equipmentQuery->get_result();
     <title>AIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="geolocation.js"></script>
 </head>
 

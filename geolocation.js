@@ -12,17 +12,38 @@ function showPosition(position) {
         + '&lon=' + position.coords.longitude
         + '&appid=685a5f6c0ec7432361a364184373d9cd')
         .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
+            if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            return response.json();
         })
         .then(data => {
-            const city = data[0].name
-            confirm('Is your city ' + city + '?')
+            if (data && data.length > 0) {
+                const city = data[0].name;
+                Swal.fire({
+                    title: 'Is your city ' + city + '?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `No`,
+                    confirmButtonColor: '#3085d6',
+                    denyButtonColor: '#2c7dc6',
+                    cancelButtonColor: '#6c757d'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire("Your location has been determined!", "", "success");
+                    } else if (result.isDenied) {
+                        Swal.fire("Your location has not been determined!", "", "info");
+                    }
+                });
+            } else {
+                Swal.fire("Location not found!", "", "info");
+            }
         })
-        .catch(error => console.error('There was a problem with the fetch operation:', error));
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            Swal.fire("Error fetching location data!", "", "error");
+        });
 }
 
 function showError(error) {
