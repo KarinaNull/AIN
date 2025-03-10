@@ -1,25 +1,50 @@
 <?php
-// contact-handler.php - Обработчик формы
+// Подключение к базе данных
 require_once 'db.php';
 
-// Функция для очистки входных данных (защита от XSS)
-function sanitizeInput($data)
+// Функция для проверки reCAPTCHA
+function verifyRecaptcha($response)
 {
-    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+    $secretKey = "6LfTBPAqAAAAAIWlOtEvSwcTdfynXgnos37x3G6U"; // Ваш Secret Key
+    $url = "https://www.google.com/recaptcha/api/siteverify";
+    $data = [
+        'secret' => $secretKey,
+        'response' => $response,
+    ];
+
+    $options = [
+        'http' => [
+            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method' => 'POST',
+            'content' => http_build_query($data),
+        ],
+    ];
+
+    $context = stream_context_create($options);
+    $result = file_get_contents($url, false, $context);
+    return json_decode($result, true);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Проверка капчи
+    $captchaResponse = $_POST['g-recaptcha-response'];
+    $recaptchaResult = verifyRecaptcha($captchaResponse);
+
+    if (!$recaptchaResult['success']) {
+        die("Ошибка: Капча не пройдена.");
+    }
+
     // Очистка входных данных
-    $email = sanitizeInput($_POST['email']);
-    $phone = sanitizeInput($_POST['phone']);
-    $message = sanitizeInput($_POST['message']);
+    $email = htmlspecialchars(trim($_POST['email']), ENT_QUOTES, 'UTF-8');
+    $phone = htmlspecialchars(trim($_POST['phone']), ENT_QUOTES, 'UTF-8');
+    $message = htmlspecialchars(trim($_POST['message']), ENT_QUOTES, 'UTF-8');
 
     // Проверка email на корректность
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die("Ошибка: Введите корректный E-mail.");
     }
 
-    // Проверка телефона (простая валидация)
+    // Проверка телефона
     if (empty($phone)) {
         die("Ошибка: Введите номер телефона.");
     }
@@ -32,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Проверка, существует ли пользователь с таким email
     $userQuery = "SELECT id FROM users WHERE login = ?";
     $stmt = $conn->prepare($userQuery);
-    $stmt->bind_param("s", $email); // Защита от SQL-инъекций
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $userResult = $stmt->get_result();
 
@@ -50,16 +75,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($requestQuery);
 
     $status = 'В обработке';
-    $stmt->bind_param("isss", $userId, $status, $phone, $message); // Защита от SQL-инъекций
+    $stmt->bind_param("isss", $userId, $status, $phone, $message);
 
     // Выполняем запрос
     if ($stmt->execute()) {
         if ($userId === NULL) {
-            // Если пользователь не найден, перенаправляем на главную страницу с ошибкой
             header('Location: mainPage.php?status=error');
             exit();
         } else {
-            // Перенаправляем на главную страницу с параметром успеха
             header('Location: mainPage.php?status=success');
             exit();
         }

@@ -1,7 +1,7 @@
 <?php
 // Устанавливаем заголовок CSP для защиты от XSS
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://openweathermap.org; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://api.openweathermap.org https://api.openweathermap.org;");
-// Подключение к базе данных
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com https://cdn.jsdelivr.net https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://openweathermap.org; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://api.openweathermap.org https://api.openweathermap.org https://www.google.com/recaptcha/; frame-src https://www.google.com/recaptcha/;");
+//подключение к бд
 include 'db.php';
 
 // Функция для безопасного вывода данных
@@ -48,6 +48,7 @@ $equipmentResult = $equipmentQuery->get_result();
     <link rel="stylesheet" href="style.css?v=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="geolocation.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -177,7 +178,7 @@ $equipmentResult = $equipmentQuery->get_result();
                 <img src="img/hand.png" alt="Рука робота">
             </div>
 
-            <form class="contact-form" action="contact-handler.php" method="POST">
+            <form id="contact-form" class="contact-form" action="contact-handler.php" method="POST">
                 <?php
                 if (isset($_GET['status'])) {
                     if ($_GET['status'] == 'success') {
@@ -195,8 +196,19 @@ $equipmentResult = $equipmentQuery->get_result();
                 <label for="message">Ваше сообщение</label>
                 <textarea id="message" name="message" placeholder="Введите ваше сообщение" required></textarea>
 
+                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
                 <button type="submit">ОТПРАВИТЬ</button>
             </form>
+
+            <div id="captchaModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <p>Пожалуйста, подтвердите, что вы не робот:</p>
+                    <div class="g-recaptcha" style="display: block ruby;" data-sitekey="6LfTBPAqAAAAANfSrW8e66LC11YdciypNow-OK_T"></div>
+                    <button type="button" onclick="submitForm()">Подтвердить</button>
+                    <button type="button" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
         </div>
 
         <?php
@@ -285,6 +297,7 @@ $equipmentResult = $equipmentQuery->get_result();
         </footer>
     </div>
     <script src="script.js"></script>
+    <script src="captcha.js"></script>
 </body>
 
 </html>
