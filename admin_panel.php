@@ -53,6 +53,41 @@ if ($order === 'asc') {
     rsort($filteredTables); // Сортировка Z → A
 }
 
+$tablesData = [];
+
+foreach ($filteredTables as $table) {
+    // Экранируем имя таблицы вручную
+    $escapedTable = $conn->real_escape_string($table);
+
+    // Формируем запрос с экранированным именем таблицы
+    $rowsQuery = "SELECT COUNT(*) as row_count FROM `$escapedTable`";
+    $result = $conn->query($rowsQuery);
+
+    if ($result) {
+        $rowCount = $result->fetch_assoc()['row_count'];
+        $tablesData[] = [
+            'name' => $table,
+            'rows' => $rowCount
+        ];
+    } else {
+        die("Ошибка выполнения запроса: " . $conn->error);
+    }
+}
+
+// Получаем данные о статусах заказов
+$statusQuery = "SELECT status, COUNT(*) as count FROM requests GROUP BY status";
+$statusResult = $conn->query($statusQuery);
+
+$statusData = [];
+if ($statusResult->num_rows > 0) {
+    while ($row = $statusResult->fetch_assoc()) {
+        $statusData[] = [
+            'status' => $row['status'],
+            'count' => $row['count']
+        ];
+    }
+}
+
 // Закрываем соединение
 $conn->close();
 ?>
@@ -110,7 +145,91 @@ $conn->close();
         <?php else: ?>
             <p>Таблицы не найдены в базе данных.</p>
         <?php endif; ?>
+
+        <div class="table-chart">
+            <div style="width: 40%; margin: auto;">
+                <canvas id="tablesChart"></canvas>
+            </div>
+
+            <div style="width: 30%; margin: auto; margin-top: 50px;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Данные для столбчатой диаграммы
+        const tablesData = <?php echo json_encode($tablesData); ?>;
+
+        const labels = tablesData.map(table => table.name);
+        const rowsData = tablesData.map(table => table.rows);
+
+        const ctx = document.getElementById('tablesChart').getContext('2d');
+        const tablesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Количество строк',
+                    data: rowsData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgb(53, 126, 126)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Данные для круговой диаграммы
+        const statusData = <?php echo json_encode($statusData); ?>;
+
+        const statusLabels = statusData.map(item => item.status);
+        const statusCounts = statusData.map(item => item.count);
+
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Количество заказов',
+                    data: statusCounts,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ],
+                    hoverBackgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Распределение заказов по статусам'
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

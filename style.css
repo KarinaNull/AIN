@@ -1581,6 +1581,8 @@ html, body {
   display: none;
 }
 
-
+.table-chart {
+  display: flex;
+}
 
 /*# sourceMappingURL=style.css.map */

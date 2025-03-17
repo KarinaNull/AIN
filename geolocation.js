@@ -7,7 +7,7 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    fetch('http://api.openweathermap.org/geo/1.0/reverse?'
+    fetch('https://api.openweathermap.org/geo/1.0/reverse?'
         + 'lat=' + position.coords.latitude
         + '&lon=' + position.coords.longitude
         + '&appid=685a5f6c0ec7432361a364184373d9cd')
