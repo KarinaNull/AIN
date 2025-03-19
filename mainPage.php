@@ -1,14 +1,6 @@
 <?php
 // Устанавливаем заголовок CSP для защиты от XSS
-header("Content-Security-Policy: 
-  default-src 'self'; 
-  script-src 'self' https://apis.google.com https://cdn.jsdelivr.net https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'unsafe-inline'; 
-  style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; 
-  img-src 'self' data: https://openweathermap.org https://steady-belekoy-5b0258.netlify.app; 
-  font-src 'self' https://fonts.gstatic.com; 
-  connect-src 'self' http://api.openweathermap.org https://api.openweathermap.org https://www.google.com/recaptcha/; 
-  frame-src https://www.google.com/recaptcha/;
-");
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com https://cdn.jsdelivr.net https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://openweathermap.org https://steady-belekoy-5b0258.netlify.app; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://api.openweathermap.org https://api.openweathermap.org https://www.google.com/recaptcha/; frame-src https://www.google.com/recaptcha/;");
 //подключение к бд
 include 'db.php';
 

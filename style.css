@@ -79,9 +79,6 @@
   line-height: 1.5;
   color: #bbbbbb;
 }
-.footer .footer-disclaimer p {
-  width: 1163px;
-}
 .footer .footer-disclaimer p:last-child {
   margin-top: 50px;
 }
@@ -439,6 +436,7 @@ html, body {
   margin-right: 150px;
   margin-top: 50px;
   width: 260px;
+  z-index: 999;
 }
 .categories .left-cat .categories-message .message-title {
   font-size: 22px;
@@ -1584,5 +1582,405 @@ html, body {
 .table-chart {
   display: flex;
 }
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@media (max-width: 1200px) {
+  * {
+    font-size: 80%;
+  }
+  .welckome-block {
+    width: 100%;
+    height: 599px;
+    background-color: #181717;
+    position: relative;
+    overflow: hidden;
+  }
+  .line-image {
+    width: 60%;
+  }
+  .welcome-message {
+    top: 25%;
+    left: 5%;
+  }
+  .welcome-message .welcome-title {
+    font-size: 40px;
+  }
+  .welcome-message .implementation-focus,
+  .welcome-message .future-business {
+    font-size: 72px;
+  }
+  .guarantee-container {
+    left: 100px;
+  }
+  .categories {
+    margin-top: 5px;
+  }
+  .categories .before-categories {
+    font-size: 12px;
+  }
+  .categories .categories-main {
+    font-size: 25px;
+  }
+  .categories .categories-description {
+    font-size: 18px;
+  }
+  .categories .categories-img {
+    width: 55.9%;
+    margin-top: 0px;
+    margin-left: 252.4px;
+  }
+  .categories .left-cat {
+    align-items: center;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .categories .left-cat .categories-message {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: -10.3px;
+  }
+  .categories .left-cat .categories-message:nth-child(2) {
+    margin-right: 0;
+    margin-top: 15px;
+  }
+  .categories .left-cat .categories-message .message-title {
+    font-size: 14px;
+  }
+  .categories .left-cat .categories-message .message-text {
+    font-size: 12px;
+  }
+  .navbar .nav-list li a {
+    font-size: 14px;
+  }
+  .navbar .account a {
+    font-size: 14px;
+  }
+  .about-ain {
+    color: #ffffff;
+    padding: 60px 20px;
+    padding-top: 60px;
+    text-align: center;
+    padding-top: 30px;
+  }
+  .about-ain .about-title {
+    font-size: 45px;
+    margin-top: 10px;
+  }
+  .about-ain .about-description {
+    font-size: 16px;
+  }
+  .about-ain .statistics {
+    margin-top: 63px;
+  }
+  .about-ain .statistics .statistic-item .statistic-value {
+    font-size: 32px;
+  }
+  .about-ain .statistics .statistic-item .statistic-description {
+    font-size: 14px;
+  }
+  .equipment-section {
+    padding: 30px;
+    padding-top: 5px;
+  }
+  .equipment-section .equipment-info {
+    margin-right: 0;
+    margin-left: 18px;
+    margin-top: 50px;
+  }
+  .equipment-section .equipment-info .equipment-image {
+    width: 80%;
+  }
+  .equipment-section .equipment-info h2 {
+    font-size: 21px;
+  }
+  .equipment-section .equipment-info p {
+    font-size: 10px;
+  }
+  .equipment-section .equipment-info .equipment-list .equipment-item .equipment-sub-item {
+    padding-bottom: 1px;
+  }
+  .equipment-section .equipment-info .equipment-list .equipment-item .equipment-sub-item h3 {
+    font-size: 15px;
+  }
+  .equipment-section .equipment-info .equipment-list .equipment-item .equipment-sub-item p {
+    font-size: 12px;
+  }
+  .equipment-section .equipment-image {
+    margin-right: 0;
+    text-align: center;
+  }
+  .contact-section {
+    padding: 50px;
+  }
+  .contact-section .contact-info {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .contact-section .contact-info h2 {
+    font-size: 32px;
+  }
+  .contact-section .contact-info p {
+    font-size: 18px;
+  }
+  .contact-section .contact-info .phone-number-text {
+    font-size: 14px;
+    margin-top: 73.9%;
+  }
+  .contact-section .contact-info .phone-number {
+    font-size: 30px;
+  }
+  .contact-section .contact-form {
+    margin-right: 0;
+    max-width: 100%;
+  }
+  .contact-section .contact-form label {
+    font-size: 14px;
+  }
+  .contact-section .contact-form input,
+  .contact-section .contact-form textarea {
+    font-size: 14px;
+  }
+  .contact-section .contact-form button {
+    font-size: 16px;
+  }
+  .contact-section .contact-image img {
+    width: 50%;
+    margin-top: 92.3px;
+  }
+  .reviews-section {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .reviews-section .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+    margin-top: 13.9px;
+    margin-bottom: 49px;
+  }
+  .reviews-section .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .reviews-section .review-item .review-content {
+    font-size: 16px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .colleagues .colleague img {
+    width: 100px;
+  }
+  footer.footer .footer-content .footer-section h2 {
+    font-size: 18px;
+  }
+  footer.footer .footer-content .footer-section p {
+    font-size: 14px;
+  }
+  footer.footer .footer-bottom p {
+    font-size: 12px;
+  }
+  footer.footer .footer-disclaimer p {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1840px) and (max-width: 1920px) {
+  .colleagues {
+    margin-top: 209.4px;
+  }
+  .colleagues .colleague img {
+    width: 100px;
+  }
+}
+@media (min-width: 1920px) {
+  .colleagues {
+    margin-top: 209.4px;
+  }
+  .colleagues .colleague img {
+    width: 100px;
+  }
+}
+@media (min-width: 1800px) and (max-width: 1840px) {
+  .welckome-block {
+    height: 750px;
+  }
+  .colleagues {
+    margin-top: 209.4px;
+  }
+  .colleagues .colleague img {
+    width: 100px;
+  }
+}
+@media (min-width: 1600px) and (max-width: 1800px) {
+  .reviews-section {
+    gap: 117px;
+  }
+  .reviews-section .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+  }
+  .reviews-section .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .reviews-section .review-item .review-content {
+    font-size: 16px;
+  }
+  .welckome-block {
+    height: 800px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .categories-img {
+    width: 55%;
+    margin-top: 90px;
+  }
+  .contact-image img {
+    margin-top: 40px;
+    width: 50%;
+  }
+  .contact-section .contact-info .phone-number-text {
+    margin-top: 69.4%;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1242px) {
+  .reviews-section {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .reviews-section .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+  }
+  .reviews-section .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .reviews-section .review-item .review-content {
+    font-size: 16px;
+  }
+  .welckome-block {
+    height: 750px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .categories-img {
+    margin-top: 90px;
+    width: 64.5%;
+  }
+  .contact-image img {
+    width: 50%;
+    margin-top: 251.8px;
+  }
+  .contact-section .contact-info .phone-number-text {
+    margin-top: 69.4%;
+  }
+}
+@media (min-width: 1242px) and (max-width: 1343px) {
+  .reviews-section {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .reviews-section .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+  }
+  .reviews-section .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .reviews-section .review-item .review-content {
+    font-size: 16px;
+  }
+  .welckome-block {
+    height: 750px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .categories-img {
+    width: 62.4%;
+  }
+  .contact-image img {
+    width: 43.4%;
+    margin-top: 285.5px;
+  }
+  .contact-section .contact-info .phone-number-text {
+    margin-top: 69.4%;
+  }
+}
+@media (min-width: 1343px) and (max-width: 1600px) {
+  .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+  }
+  .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .review-item .review-content {
+    font-size: 16px;
+  }
+  .welckome-block {
+    height: 750px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .categories-img {
+    width: 62.6%;
+    margin-top: 309.4px;
+  }
+  .contact-image img {
+    width: 41.3%;
+    margin-top: 209px;
+  }
+  .contact-section .contact-info .phone-number-text {
+    margin-top: 69.4%;
+  }
+}
+@media (min-width: 930px) and (max-width: 1159px) {
+  .review-item {
+    flex: 1 1 calc(50% - 40px);
+    box-sizing: border-box;
+  }
+  .review-item:nth-child(n+3) {
+    display: none;
+  }
+  .review-item .review-content {
+    font-size: 16px;
+  }
+  .welckome-block {
+    height: 750px;
+  }
+  .colleagues {
+    margin-top: 10px;
+  }
+  .categories-img {
+    width: 62.6%;
+    margin-top: 309.4px;
+  }
+  .contact-image img {
+    width: 41.3%;
+    margin-top: 209px;
+  }
+  .contact-section .contact-info .phone-number-text {
+    margin-top: 69.4%;
+  }
+}
+
 
 /*# sourceMappingURL=style.css.map */
